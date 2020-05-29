@@ -49,7 +49,7 @@ const Department = (deptInfo) => {
 const element = (
   <DisplayEmployeeInfo
     Id="101"
-    Name="John"
+    Name="John F"
     Location="New Jersey"
     Salary="82000"
     deptName="HR"
