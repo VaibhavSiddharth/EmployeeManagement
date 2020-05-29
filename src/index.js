@@ -2,9 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-function DisplayEmployeeInfo(employee) {
+var DisplayEmployeeInfo = (employee) => {
   return (
     <div>
+      <h1>Employee Details</h1>
       <p>
         <label>
           Employee Id: <b>{employee.Id}</b>
@@ -27,7 +28,7 @@ function DisplayEmployeeInfo(employee) {
       </p>
     </div>
   );
-}
+};
 
 const element = (
   <DisplayEmployeeInfo
