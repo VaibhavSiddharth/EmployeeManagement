@@ -26,16 +26,34 @@ var DisplayEmployeeInfo = (employee) => {
           Employee Location: <b>{employee.Location}</b>
         </label>
       </p>
+      <Department
+        deptName={employee.deptName}
+        headName={employee.headName}
+      ></Department>
     </div>
   );
 };
 
+const Department = (deptInfo) => {
+  return (
+    <div>
+      <p>
+        Department Name :<b>{deptInfo.deptName}</b>
+      </p>
+      <p>
+        Department Head Name: <b>{deptInfo.headName}</b>
+      </p>
+    </div>
+  );
+};
 const element = (
   <DisplayEmployeeInfo
     Id="101"
     Name="John"
     Location="New Jersey"
     Salary="82000"
+    deptName="HR"
+    headName="Richard"
   ></DisplayEmployeeInfo>
 );
 ReactDOM.render(element, document.getElementById("root"));
