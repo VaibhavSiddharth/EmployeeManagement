@@ -6,40 +6,55 @@ class EmployeeComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      employees: [],
+      message: "",
     };
   }
-  componentDidMount() {
-    fetch("https://localhost:44346/api/Employee")
-      .then((res) => res.json())
+
+  onCreateEmployee = () => {
+    let employeeInfo = {
+      Id: this.refs.Id.value,
+      Name: this.refs.Name.value,
+      Location: this.refs.Location.value,
+      Salary: this.refs.Salary.value,
+    };
+    console.log(JSON.stringify(employeeInfo));
+    fetch("https://localhost:44346/api/employee", {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(employeeInfo),
+    })
+      .then((r) => r.json())
       .then((result) => {
-        this.setState({ employees: result });
+        this.setState({ message: "New Employee Entered Successfully" });
       });
-  }
+  };
+
   render() {
     return (
       <div>
-        <h3>Employee Details</h3>
-        <table border="{{style:1px solid}}">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Salary</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.employees.map((emp) => (
-              <tr key={emp.Id}>
-                <td>{emp.Id}</td>
-                <td>{emp.Name}</td>
-                <td>{emp.Location}</td>
-                <td>{emp.Salary}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <h2>Please enter Employee Details</h2>
+        <p>
+          <label>
+            Employee Id: <input type="text" ref="Id"></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            Employee Name: <input type="text" ref="Name"></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            Employee Location: <input type="text" ref="Location"></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            Employee Salary: <input type="text" ref="Salary"></input>
+          </label>
+        </p>
+        <button onClick={this.onCreateEmployee}>Create Employee</button>
+        <p>{this.state.message}</p>
       </div>
     );
   }
@@ -48,6 +63,52 @@ class EmployeeComponent extends React.Component {
 const element = <EmployeeComponent></EmployeeComponent>;
 
 ReactDOM.render(element, document.getElementById("root"));
+// class EmployeeComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       employees: [],
+//     };
+//   }
+//   componentDidMount() {
+//     fetch("https://localhost:44346/api/Employee")
+//       .then((res) => res.json())
+//       .then((result) => {
+//         this.setState({ employees: result });
+//       });
+//   }
+//   render() {
+//     return (
+//       <div>
+//         <h3>Employee Details</h3>
+//         <table border="{{style:1px solid}}">
+//           <thead>
+//             <tr>
+//               <th>Id</th>
+//               <th>Name</th>
+//               <th>Location</th>
+//               <th>Salary</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {this.state.employees.map((emp) => (
+//               <tr key={emp.Id}>
+//                 <td>{emp.Id}</td>
+//                 <td>{emp.Name}</td>
+//                 <td>{emp.Location}</td>
+//                 <td>{emp.Salary}</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = <EmployeeComponent></EmployeeComponent>;
+
+// ReactDOM.render(element, document.getElementById("root"));
 // function Employee(props) {
 //   console.log(props);
 //   return (
