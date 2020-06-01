@@ -2,54 +2,100 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-function Employee(props) {
-  console.log(props);
-  return (
-    <div style={{ border: "3px solid blue" }}>
-      <p>
-        <label>
-          Employee Id: <b>{props.data.Id}</b>
-        </label>
-      </p>
-      <p>
-        <label>
-          Employee Name: <b>{props.data.Name}</b>
-        </label>
-      </p>
-      <p>
-        <label>
-          Employee Location: <b>{props.data.Location}</b>
-        </label>
-      </p>
-      <p>
-        <label>
-          Employee Salary: <b>{props.data.Salary}</b>
-        </label>
-      </p>
-    </div>
-  );
+class EmployeeComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      employees: [],
+    };
+  }
+  componentDidMount() {
+    fetch("https://localhost:44346/api/Employee")
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({ employees: result });
+      });
+  }
+  render() {
+    return (
+      <div>
+        <h3>Employee Details</h3>
+        <table border="{{style:1px solid}}">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Salary</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.employees.map((emp) => (
+              <tr key={emp.Id}>
+                <td>{emp.Id}</td>
+                <td>{emp.Name}</td>
+                <td>{emp.Location}</td>
+                <td>{emp.Salary}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 }
 
-function DisplayEmployeeInfo(props) {
-  const empList = props.employeeList;
-  console.log(empList);
-  const listElement = empList.map((emp) => (
-    <Employee data={emp} key={emp.Id}></Employee>
-  ));
-  return <div>{listElement}</div>;
-}
-
-const Employees = [
-  { Id: 101, Name: "John Levis", Location: "New York", Salary: 65000 },
-  { Id: 102, Name: "Robert", Location: "New Jersey", Salary: 78000 },
-  { Id: 103, Name: "Adam", Location: "Ohio", Salary: 98000 },
-];
-
-const element = (
-  <DisplayEmployeeInfo employeeList={Employees}></DisplayEmployeeInfo>
-);
+const element = <EmployeeComponent></EmployeeComponent>;
 
 ReactDOM.render(element, document.getElementById("root"));
+// function Employee(props) {
+//   console.log(props);
+//   return (
+//     <div style={{ border: "3px solid blue" }}>
+//       <p>
+//         <label>
+//           Employee Id: <b>{props.data.Id}</b>
+//         </label>
+//       </p>
+//       <p>
+//         <label>
+//           Employee Name: <b>{props.data.Name}</b>
+//         </label>
+//       </p>
+//       <p>
+//         <label>
+//           Employee Location: <b>{props.data.Location}</b>
+//         </label>
+//       </p>
+//       <p>
+//         <label>
+//           Employee Salary: <b>{props.data.Salary}</b>
+//         </label>
+//       </p>
+//     </div>
+//   );
+// }
+
+// function DisplayEmployeeInfo(props) {
+//   const empList = props.employeeList;
+//   console.log(empList);
+//   const listElement = empList.map((emp) => (
+//     <Employee data={emp} key={emp.Id}></Employee>
+//   ));
+//   return <div>{listElement}</div>;
+// }
+
+// const Employees = [
+//   { Id: 101, Name: "John Levis", Location: "New York", Salary: 65000 },
+//   { Id: 102, Name: "Robert", Location: "New Jersey", Salary: 78000 },
+//   { Id: 103, Name: "Adam", Location: "Ohio", Salary: 98000 },
+// ];
+
+// const element = (
+//   <DisplayEmployeeInfo employeeList={Employees}></DisplayEmployeeInfo>
+// );
+
+// ReactDOM.render(element, document.getElementById("root"));
 // const EmployeeContext = React.createContext({
 //   data: "",
 //   changeEmployeeInfo: () => {},
