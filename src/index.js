@@ -2,44 +2,225 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-class CountCharacters extends React.Component {
+const employeeContext = React.createContext();
+
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Message: "",
+      Id: 1002,
+      Name: "Mark",
+      Location: "Texas",
+      Salary: 87000,
     };
   }
 
-  onMessageChange(text) {
-    this.setState({
-      Message: "Message has " + text.length + " number of characters",
-    });
-  }
-
+  changeEmployeeData = () => {
+    this.setState({ Id: parseInt(this.state.Id) + 1 });
+  };
   render() {
     return (
       <div>
-        <h2>Welcome to Count Characters Component</h2>
+        <h3>Welcome To App Component</h3>
         <p>
           <label>
-            Enter a message:
-            <input
-              type="text"
-              onChange={(e) => this.onMessageChange(e.target.value)}
-            ></input>
+            Employee Id: <b>{this.state.Id}</b>
           </label>
         </p>
+        {console.log(this.state)}
+        <employeeContext.Provider value={this.state}>
+          <Employee />
+        </employeeContext.Provider>
         <p>
-          <label>{this.state.Message}</label>
+          <button onClick={this.changeEmployeeData}>Update</button>
         </p>
       </div>
     );
   }
 }
 
-const element = <CountCharacters></CountCharacters>;
+class Employee extends React.Component {
+  static contextType = employeeContext;
+  render() {
+    console.log(this.context);
+    return (
+      <div>
+        <h3>Welcome To Employee Component</h3>
+        <p>
+          <label>
+            {console.log(this.context)}
+            Employee Id: <b>{this.context.Id}</b>
+          </label>
+        </p>
+        <Salary></Salary>
+      </div>
+    );
+  }
+}
 
+class Salary extends React.Component {
+  static contextType = employeeContext;
+  render() {
+    return (
+      <div>
+        <h3>Welcome To Salary Component</h3>
+        <p>
+          <label>
+            Employee ID: <b>{this.context.Id}</b>
+          </label>
+        </p>
+      </div>
+    );
+  }
+}
+
+const element = <App></App>;
 ReactDOM.render(element, document.getElementById("root"));
+// class Employee extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       updatedSalary: null,
+//     };
+//   }
+
+//   getUpdatedSalary = (salary) => {
+//     this.setState({ updatedSalary: salary });
+//   };
+
+//   render() {
+//     return (
+//       <div>
+//         <h3>Employee Information</h3>
+//         <p>
+//           Employee ID: <b>{this.props.ID}</b>{" "}
+//         </p>
+//         <p>
+//           Employee Name: <b>{this.props.Name}</b>
+//         </p>
+//         <p>
+//           Employee Location: <b>{this.props.Location}</b>
+//         </p>
+//         <p>
+//           Employee Salary: <b>{this.props.Salary}</b>
+//         </p>
+//         <p>
+//           <label>
+//             Employee Updated Salary: <b>{this.state.updatedSalary}</b>
+//           </label>
+//         </p>
+//         <Salary
+//           BasicSalary={this.props.BasicSalary}
+//           HRA={this.props.HRA}
+//           SpecialAllowance={this.props.SpecialAllowance}
+//           onSalaryChange={this.getUpdatedSalary}
+//         ></Salary>
+//       </div>
+//     );
+//   }
+// }
+
+// class Salary extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       basic: this.props.BasicSalary,
+//       hra: this.props.HRA,
+//       sa: this.props.SpecialAllowance,
+//     };
+//   }
+
+//   updateSalary = () => {
+//     let salary =
+//       parseInt(this.refs.basic.value) +
+//       parseInt(this.refs.hra.value) +
+//       parseInt(this.refs.sa.value);
+//     this.props.onSalaryChange(salary);
+//   };
+//   render() {
+//     return (
+//       <div>
+//         <h3>Salary Details...</h3>
+//         <p>
+//           <label>
+//             Basic Salary:{" "}
+//             <input
+//               type="text"
+//               ref="basic"
+//               defaultValue={this.state.basic}
+//             ></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             HRA:{" "}
+//             <input type="text" ref="hra" defaultValue={this.state.hra}></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Special Allowance:{" "}
+//             <input type="text" ref="sa" defaultValue={this.state.sa}></input>
+//           </label>
+//         </p>
+//         <button onClick={this.updateSalary}>Update</button>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = (
+//   <Employee
+//     ID="101A"
+//     Name="Hopkins"
+//     Location="Ohio,USA"
+//     BasicSalary="2500"
+//     HRA="300"
+//     SpecialAllowance="4800"
+//     Salary="7600"
+//   ></Employee>
+// );
+
+// ReactDOM.render(element, document.getElementById("root"));
+//Implementing React State
+// class CountCharacters extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       Message: "",
+//     };
+//   }
+
+//   onMessageChange(text) {
+//     this.setState({
+//       Message: "Message has " + text.length + " number of characters",
+//     });
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Welcome to Count Characters Component</h2>
+//         <p>
+//           <label>
+//             Enter a message:
+//             <input
+//               type="text"
+//               onChange={(e) => this.onMessageChange(e.target.value)}
+//             ></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>{this.state.Message}</label>
+//         </p>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = <CountCharacters></CountCharacters>;
+
+// ReactDOM.render(element, document.getElementById("root"));
 
 // class Employee extends React.Component {
 //   state = { counter: 0 };
