@@ -2,80 +2,141 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-const employeeContext = React.createContext();
-
+const EmployeeContext = React.createContext({
+  data: "",
+  changeEmployeeInfo: () => {},
+});
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Id: 1002,
-      Name: "Mark",
-      Location: "Texas",
-      Salary: 87000,
+      data: {
+        Id: 1001,
+        Name: "John",
+        Location: "New Jersey",
+        Salary: 95000,
+      },
+      changeEmployeeInfo: this.updateEmployeeInfo,
     };
   }
 
-  changeEmployeeData = () => {
-    this.setState({ Id: parseInt(this.state.Id) + 1 });
+  updateEmployeeInfo = () => {
+    this.setState({ data: { Id: parseInt(this.state.data.Id) + 1 } });
   };
+
   render() {
     return (
       <div>
-        <h3>Welcome To App Component</h3>
+        <h3>App Component</h3>
         <p>
           <label>
-            Employee Id: <b>{this.state.Id}</b>
+            Employee Id: <b>{this.state.data.Id}</b>
           </label>
         </p>
-        {console.log(this.state)}
-        <employeeContext.Provider value={this.state}>
-          <Employee />
-        </employeeContext.Provider>
-        <p>
-          <button onClick={this.changeEmployeeData}>Update</button>
-        </p>
+        <EmployeeContext.Provider value={this.state}>
+          <Employee></Employee>
+        </EmployeeContext.Provider>
       </div>
     );
   }
 }
 
 class Employee extends React.Component {
-  static contextType = employeeContext;
-  render() {
-    console.log(this.context);
-    return (
-      <div>
-        <h3>Welcome To Employee Component</h3>
-        <p>
-          <label>
-            {console.log(this.context)}
-            Employee Id: <b>{this.context.Id}</b>
-          </label>
-        </p>
-        <Salary></Salary>
-      </div>
-    );
-  }
-}
-
-class Salary extends React.Component {
-  static contextType = employeeContext;
+  static contextType = EmployeeContext;
   render() {
     return (
       <div>
-        <h3>Welcome To Salary Component</h3>
+        <h3>Welcome to Employee Component</h3>
         <p>
           <label>
-            Employee ID: <b>{this.context.Id}</b>
+            Employee Id: <b>{this.context.data.Id}</b>
           </label>
         </p>
+        <button onClick={this.context.changeEmployeeInfo}>Update</button>
       </div>
     );
   }
 }
 
 const element = <App></App>;
+
 ReactDOM.render(element, document.getElementById("root"));
+
+//Implementing Context to pass data to child component
+// const employeeContext = React.createContext();
+
+// class App extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       Id: 1002,
+//       Name: "Mark",
+//       Location: "Texas",
+//       Salary: 87000,
+//     };
+//   }
+
+//   changeEmployeeData = () => {
+//     this.setState({ Id: parseInt(this.state.Id) + 1 });
+//   };
+//   render() {
+//     return (
+//       <div>
+//         <h3>Welcome To App Component</h3>
+//         <p>
+//           <label>
+//             Employee Id: <b>{this.state.Id}</b>
+//           </label>
+//         </p>
+//         {console.log(this.state)}
+//         <employeeContext.Provider value={this.state}>
+//           <Employee />
+//         </employeeContext.Provider>
+//         <p>
+//           <button onClick={this.changeEmployeeData}>Update</button>
+//         </p>
+//       </div>
+//     );
+//   }
+// }
+
+// class Employee extends React.Component {
+//   static contextType = employeeContext;
+//   render() {
+//     console.log(this.context);
+//     return (
+//       <div>
+//         <h3>Welcome To Employee Component</h3>
+//         <p>
+//           <label>
+//             {console.log(this.context)}
+//             Employee Id: <b>{this.context.Id}</b>
+//           </label>
+//         </p>
+//         <Salary></Salary>
+//       </div>
+//     );
+//   }
+// }
+
+// class Salary extends React.Component {
+//   static contextType = employeeContext;
+//   render() {
+//     return (
+//       <div>
+//         <h3>Welcome To Salary Component</h3>
+//         <p>
+//           <label>
+//             Employee ID: <b>{this.context.Id}</b>
+//           </label>
+//         </p>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = <App></App>;
+// ReactDOM.render(element, document.getElementById("root"));
 // class Employee extends React.Component {
 //   constructor(props) {
 //     super(props);
