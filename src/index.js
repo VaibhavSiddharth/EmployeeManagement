@@ -1,68 +1,221 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import { useFormik } from "formik";
 
-class EmployeeComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      message: "",
-    };
-  }
+const EmployeeComponent = () => {
+  const formik = useFormik({
+    initialValues: {
+      Id: "",
+      Name: "",
+      Location: "",
+      Salary: "",
+    },
+    onSubmit: (values) => {
+      alert(JSON.stringify(values));
+    },
+  });
 
-  onCreateEmployee = () => {
-    let employeeInfo = {
-      Id: this.refs.Id.value,
-      Name: this.refs.Name.value,
-      Location: this.refs.Location.value,
-      Salary: this.refs.Salary.value,
-    };
-    console.log(JSON.stringify(employeeInfo));
-    fetch("https://localhost:44346/api/employee", {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(employeeInfo),
-    })
-      .then((r) => r.json())
-      .then((result) => {
-        this.setState({ message: "New Employee Entered Successfully" });
-      });
-  };
-
-  render() {
-    return (
-      <div>
-        <h2>Please enter Employee Details</h2>
+  return (
+    <div>
+      <h3>New Employee Form</h3>
+      <form onSubmit={formik.handleSubmit}>
         <p>
-          <label>
-            Employee Id: <input type="text" ref="Id"></input>
-          </label>
+          <label htmlFor="Id">Employee Id </label>
+          <input
+            type="text"
+            name="Id"
+            id="Id"
+            value={formik.values.Id}
+            onChange={formik.handleChange}
+          ></input>
         </p>
         <p>
-          <label>
-            Employee Name: <input type="text" ref="Name"></input>
-          </label>
+          <label htmlFor="Name">Employee Name</label>
+          <input
+            type="text"
+            name="Name"
+            id="Name"
+            value={formik.values.Name}
+            onChange={formik.handleChange}
+          ></input>
         </p>
         <p>
-          <label>
-            Employee Location: <input type="text" ref="Location"></input>
-          </label>
+          <label htmlFor="Location">Location</label>
+          <input
+            type="text"
+            name="Location"
+            id="Location"
+            value={formik.values.Location}
+            onChange={formik.handleChange}
+          ></input>
         </p>
         <p>
-          <label>
-            Employee Salary: <input type="text" ref="Salary"></input>
-          </label>
+          <label htmlFor="Salary">Employee Salary</label>
+          <input
+            type="text"
+            name="Salary"
+            id="Salary"
+            value={formik.values.Salary}
+            onChange={formik.handleChange}
+          ></input>
         </p>
-        <button onClick={this.onCreateEmployee}>Create Employee</button>
-        <p>{this.state.message}</p>
-      </div>
-    );
-  }
-}
+        <button type="submit">Create</button>
+      </form>
+    </div>
+  );
+};
 
 const element = <EmployeeComponent></EmployeeComponent>;
-
 ReactDOM.render(element, document.getElementById("root"));
+
+// class EmployeeComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+
+//     this.state = {
+//       employee: {
+//         Id: "",
+//         Name: "",
+//         Location: "",
+//         Salary: "",
+//       },
+//     };
+//   }
+
+//   changeHandler = (e) => {
+//     const name = e.target.name;
+//     const value = e.target.value;
+//     this.setState({
+//       employee: {
+//         ...this.state.employee,
+//         [name]: value,
+//       },
+//     });
+//   };
+//   onCreateEmployee = () => {
+//     console.log(this.state.employee);
+//   };
+
+//   render() {
+//     return (
+//       <div>
+//         <h3>New Employee Form...</h3>
+//         <form>
+//           <p>
+//             <label>
+//               Employee Id{" "}
+//               <input
+//                 type="text"
+//                 name="Id"
+//                 value={this.state.employee.Id}
+//                 onChange={this.changeHandler}
+//               ></input>
+//             </label>
+//           </p>
+//           <p>
+//             <label>
+//               Employee Name{" "}
+//               <input
+//                 type="text"
+//                 name="Name"
+//                 value={this.state.employee.Name}
+//                 onChange={this.changeHandler}
+//               ></input>
+//             </label>
+//           </p>
+//           <p>
+//             <label>
+//               Employee Location{" "}
+//               <input
+//                 type="text"
+//                 name="Location"
+//                 value={this.state.employee.Location}
+//                 onChange={this.changeHandler}
+//               ></input>
+//             </label>
+//           </p>
+//           <p>
+//             <label>
+//               Employee Salary{" "}
+//               <input
+//                 type="text"
+//                 name="Salary"
+//                 value={this.state.employee.Salary}
+//                 onChange={this.changeHandler}
+//               ></input>
+//             </label>
+//           </p>
+//         </form>
+//         <button onClick={this.onCreateEmployee}>Create</button>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = <EmployeeComponent></EmployeeComponent>;
+// ReactDOM.render(element, document.getElementById("root"));
+// class EmployeeComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       message: "",
+//     };
+//   }
+
+//   onCreateEmployee = () => {
+//     let employeeInfo = {
+//       Id: this.refs.Id.value,
+//       Name: this.refs.Name.value,
+//       Location: this.refs.Location.value,
+//       Salary: this.refs.Salary.value,
+//     };
+//     console.log(JSON.stringify(employeeInfo));
+//     fetch("https://localhost:44346/api/employee", {
+//       method: "POST",
+//       headers: { "Content-type": "application/json" },
+//       body: JSON.stringify(employeeInfo),
+//     })
+//       .then((r) => r.json())
+//       .then((result) => {
+//         this.setState({ message: "New Employee Entered Successfully" });
+//       });
+//   };
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Please enter Employee Details</h2>
+//         <p>
+//           <label>
+//             Employee Id: <input type="text" ref="Id"></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Employee Name: <input type="text" ref="Name"></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Employee Location: <input type="text" ref="Location"></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Employee Salary: <input type="text" ref="Salary"></input>
+//           </label>
+//         </p>
+//         <button onClick={this.onCreateEmployee}>Create Employee</button>
+//         <p>{this.state.message}</p>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = <EmployeeComponent></EmployeeComponent>;
+
+// ReactDOM.render(element, document.getElementById("root"));
 // class EmployeeComponent extends React.Component {
 //   constructor(props) {
 //     super(props);
