@@ -3,6 +3,29 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { useFormik } from "formik";
 
+const validateEmployee = (empData) => {
+  const errors = {};
+
+  if (!empData.Name) {
+    errors.Name = "Please enter your name";
+  } else if (empData.Name.length > 20) {
+    errors.Name = "Name cannot exceed more than 20 characters";
+  }
+
+  if (!empData.Location) {
+    errors.Location = "Location cannot be left blank";
+  }
+
+  if (!empData.EmailId) {
+    errors.EmailId = "Email Address cannot be left blank";
+  } else if (
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(empData.EmailId)
+  ) {
+    errors.EmailId = "Invalid Email Address";
+  }
+  return errors;
+};
+
 const EmployeeComponent = () => {
   const formik = useFormik({
     initialValues: {
@@ -10,7 +33,9 @@ const EmployeeComponent = () => {
       Name: "",
       Location: "",
       Salary: "",
+      EmailId: "",
     },
+    validate: validateEmployee,
     onSubmit: (values) => {
       alert(JSON.stringify(values));
     },
@@ -31,27 +56,35 @@ const EmployeeComponent = () => {
           ></input>
         </p>
         <p>
-          <label htmlFor="Name">Employee Name</label>
+          <label htmlFor="Name">Employee Name </label>
           <input
             type="text"
             name="Name"
             id="Name"
             value={formik.values.Name}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           ></input>
+          {formik.touched.Name && formik.errors.Name ? (
+            <span style={{ color: "red" }}>{formik.errors.Name}</span>
+          ) : null}
         </p>
         <p>
-          <label htmlFor="Location">Location</label>
+          <label htmlFor="Location">Location </label>
           <input
             type="text"
             name="Location"
             id="Location"
             value={formik.values.Location}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           ></input>
+          {formik.touched.Location && formik.errors.Location ? (
+            <span style={{ color: "red" }}>{formik.errors.Location}</span>
+          ) : null}
         </p>
         <p>
-          <label htmlFor="Salary">Employee Salary</label>
+          <label htmlFor="Salary">Employee Salary </label>
           <input
             type="text"
             name="Salary"
@@ -59,6 +92,20 @@ const EmployeeComponent = () => {
             value={formik.values.Salary}
             onChange={formik.handleChange}
           ></input>
+        </p>
+        <p>
+          <label htmlFor="EmailId">Email Address </label>
+          <input
+            type="text"
+            name="EmailId"
+            id="EmailId"
+            value={formik.values.EmailId}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          ></input>
+          {formik.touched.EmailId && formik.errors.EmailId ? (
+            <span style={{ color: "red" }}>{formik.errors.EmailId}</span>
+          ) : null}
         </p>
         <button type="submit">Create</button>
       </form>
