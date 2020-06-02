@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import { useFormik } from "formik";
+import { useFormik, Formik } from "formik";
 import * as yup from "yup";
 
 // const validateEmployee = (empData) => {
@@ -59,62 +59,29 @@ const EmployeeComponent = () => {
       <form onSubmit={formik.handleSubmit}>
         <p>
           <label htmlFor="Id">Employee Id </label>
-          <input
-            type="text"
-            name="Id"
-            id="Id"
-            value={formik.values.Id}
-            onChange={formik.handleChange}
-          ></input>
+          <input name="Id" {...formik.getFieldProps("Id")}></input>
         </p>
         <p>
           <label htmlFor="Name">Employee Name </label>
-          <input
-            type="text"
-            name="Name"
-            id="Name"
-            value={formik.values.Name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          ></input>
+          <input name="Name" {...formik.getFieldProps("Name")}></input>
           {formik.touched.Name && formik.errors.Name ? (
             <span style={{ color: "red" }}>{formik.errors.Name}</span>
           ) : null}
         </p>
         <p>
           <label htmlFor="Location">Location </label>
-          <input
-            type="text"
-            name="Location"
-            id="Location"
-            value={formik.values.Location}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          ></input>
+          <input name="Location" {...formik.getFieldProps("Location")}></input>
           {formik.touched.Location && formik.errors.Location ? (
             <span style={{ color: "red" }}>{formik.errors.Location}</span>
           ) : null}
         </p>
         <p>
           <label htmlFor="Salary">Employee Salary </label>
-          <input
-            type="text"
-            name="Salary"
-            id="Salary"
-            value={formik.values.Salary}
-            onChange={formik.handleChange}
-          ></input>
+          <input name="Salary" {...formik.getFieldProps("Salary")}></input>
         </p>
         <p>
           <label htmlFor="EmailId">Email Address </label>
-          <input
-            type="text"
-            name="EmailId"
-            id="EmailId"
-            value={formik.values.EmailId}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          ></input>
+          <input name="EmailId" {...formik.getFieldProps("EmailId")}></input>
           {formik.touched.EmailId && formik.errors.EmailId ? (
             <span style={{ color: "red" }}>{formik.errors.EmailId}</span>
           ) : null}
