@@ -2,29 +2,30 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { useFormik } from "formik";
+import * as yup from "yup";
 
-const validateEmployee = (empData) => {
-  const errors = {};
+// const validateEmployee = (empData) => {
+//   const errors = {};
 
-  if (!empData.Name) {
-    errors.Name = "Please enter your name";
-  } else if (empData.Name.length > 20) {
-    errors.Name = "Name cannot exceed more than 20 characters";
-  }
+//   if (!empData.Name) {
+//     errors.Name = "Please enter your name";
+//   } else if (empData.Name.length > 20) {
+//     errors.Name = "Name cannot exceed more than 20 characters";
+//   }
 
-  if (!empData.Location) {
-    errors.Location = "Location cannot be left blank";
-  }
+//   if (!empData.Location) {
+//     errors.Location = "Location cannot be left blank";
+//   }
 
-  if (!empData.EmailId) {
-    errors.EmailId = "Email Address cannot be left blank";
-  } else if (
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(empData.EmailId)
-  ) {
-    errors.EmailId = "Invalid Email Address";
-  }
-  return errors;
-};
+//   if (!empData.EmailId) {
+//     errors.EmailId = "Email Address cannot be left blank";
+//   } else if (
+//     !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(empData.EmailId)
+//   ) {
+//     errors.EmailId = "Invalid Email Address";
+//   }
+//   return errors;
+// };
 
 const EmployeeComponent = () => {
   const formik = useFormik({
@@ -35,7 +36,18 @@ const EmployeeComponent = () => {
       Salary: "",
       EmailId: "",
     },
-    validate: validateEmployee,
+    // validate: validateEmployee,
+    validationSchema: yup.object({
+      Name: yup
+        .string()
+        .max(20, "Name cannot exceed more than 20 characters")
+        .required("Please enter your name"),
+      Location: yup.string().required("Please enter your location"),
+      EmailId: yup
+        .string()
+        .email("Invalid Email")
+        .required("Please enter your email"),
+    }),
     onSubmit: (values) => {
       alert(JSON.stringify(values));
     },
