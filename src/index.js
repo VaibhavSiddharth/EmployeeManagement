@@ -1,9 +1,196 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import { useFormik, Formik } from "formik";
+import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 
+class CustomErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log(error);
+    console.log(errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div>
+          <h2>We are having issue while loading your preferences</h2>
+        </div>
+      );
+    } else {
+      return this.props.children;
+    }
+  }
+}
+class OrderComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      quantity: "",
+      address: "",
+    };
+  }
+  orderInfoChanged = (value) => {
+    this.setState({ quantity: value });
+  };
+
+  addressChange = (value) => {
+    this.setState({ address: value });
+  };
+  render() {
+    return (
+      <div>
+        <h1>Product Order </h1>
+        <ProductInformationComponent
+          quantity={this.state.quantity}
+          onQuantityChange={this.orderInfoChanged}
+        ></ProductInformationComponent>
+        <AddressInformationComponent
+          address={this.state.address}
+          onAddressChange={this.addressChange}
+        ></AddressInformationComponent>
+        <SummaryComponent
+          quantity={this.state.quantity}
+          address={this.state.address}
+          onQuantityChange={this.orderInfoChanged}
+        ></SummaryComponent>
+      </div>
+    );
+  }
+}
+
+class ProductInformationComponent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  handleChange = (e) => {
+    this.props.onQuantityChange(e.target.value);
+  };
+  render() {
+    return (
+      <div style={{ border: "3px solid red" }}>
+        <h2>Product Information </h2>
+        <p>
+          <label>
+            Product Name
+            <select>
+              <option value="Nutrilite">Nutrilite</option>
+              <option value="Artistry">Artistry</option>
+              <option value="Persona">Persona</option>
+            </select>
+          </label>
+        </p>
+        <p>
+          <label>
+            Product Quantity{" "}
+            <input
+              type="text"
+              value={this.props.quantity}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+        </p>
+      </div>
+    );
+  }
+}
+
+class AddressInformationComponent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  handleChange = (e) => {
+    this.props.onAddressChange(e.target.value);
+  };
+  render() {
+    return (
+      <div style={{ border: "3px solid red" }}>
+        <h2>Address Information</h2>
+        <p>
+          <label>
+            Address{" "}
+            <textarea
+              value={this.props.address}
+              onChange={this.handleChange}
+            ></textarea>
+          </label>
+        </p>
+        <CustomErrorBoundary>
+          <PreferredAddressComponent></PreferredAddressComponent>
+        </CustomErrorBoundary>
+      </div>
+    );
+  }
+}
+
+class PreferredAddressComponent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    // throw new Error("Not able to show Preferred Address");
+    return (
+      <div>
+        <h2>Your Existing Address </h2>
+        <p>
+          Office Address <br></br>
+          Bagmane Tech World,Outer Ring Road,Bangalore,Karnataka
+        </p>
+      </div>
+    );
+  }
+}
+
+class SummaryComponent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  handleChange = (e) => {
+    this.props.onQuantityChange(e.target.value);
+  };
+  render() {
+    return (
+      <div style={{ border: "3px solid red" }}>
+        <h2>Summary Information</h2>
+        <p>
+          <label>
+            Product Name <b>Nutrilite</b>
+          </label>
+        </p>
+        <p>
+          <label>
+            Product Quantity{" "}
+            <input
+              type="text"
+              value={this.props.quantity}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            Address <b>{this.props.address}</b>
+          </label>
+        </p>
+        <button>Place Order</button>
+      </div>
+    );
+  }
+}
+
+const element = <OrderComponent></OrderComponent>;
+ReactDOM.render(element, document.getElementById("root"));
 // const validateEmployee = (empData) => {
 //   const errors = {};
 
@@ -27,73 +214,143 @@ import * as yup from "yup";
 //   return errors;
 // };
 
-const EmployeeComponent = () => {
-  const formik = useFormik({
-    initialValues: {
-      Id: "",
-      Name: "",
-      Location: "",
-      Salary: "",
-      EmailId: "",
-    },
-    // validate: validateEmployee,
-    validationSchema: yup.object({
-      Name: yup
-        .string()
-        .max(20, "Name cannot exceed more than 20 characters")
-        .required("Please enter your name"),
-      Location: yup.string().required("Please enter your location"),
-      EmailId: yup
-        .string()
-        .email("Invalid Email")
-        .required("Please enter your email"),
-    }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values));
-    },
-  });
+// const EmployeeComponent = () => {
+//   // const formik = useFormik({
+//   //   initialValues: {
+//   //     Id: "",
+//   //     Name: "",
+//   //     Location: "",
+//   //     Salary: "",
+//   //     EmailId: "",
+//   //   },
+//   //   // validate: validateEmployee,
+//   //   validationSchema: yup.object({
+//   //     Name: yup
+//   //       .string()
+//   //       .max(20, "Name cannot exceed more than 20 characters")
+//   //       .required("Please enter your name"),
+//   //     Location: yup.string().required("Please enter your location"),
+//   //     EmailId: yup
+//   //       .string()
+//   //       .email("Invalid Email")
+//   //       .required("Please enter your email"),
+//   //   }),
+//   //   onSubmit: (values) => {
+//   //     alert(JSON.stringify(values));
+//   //   },
+//   // });
 
-  return (
-    <div>
-      <h3>New Employee Form</h3>
-      <form onSubmit={formik.handleSubmit}>
-        <p>
-          <label htmlFor="Id">Employee Id </label>
-          <input name="Id" {...formik.getFieldProps("Id")}></input>
-        </p>
-        <p>
-          <label htmlFor="Name">Employee Name </label>
-          <input name="Name" {...formik.getFieldProps("Name")}></input>
-          {formik.touched.Name && formik.errors.Name ? (
-            <span style={{ color: "red" }}>{formik.errors.Name}</span>
-          ) : null}
-        </p>
-        <p>
-          <label htmlFor="Location">Location </label>
-          <input name="Location" {...formik.getFieldProps("Location")}></input>
-          {formik.touched.Location && formik.errors.Location ? (
-            <span style={{ color: "red" }}>{formik.errors.Location}</span>
-          ) : null}
-        </p>
-        <p>
-          <label htmlFor="Salary">Employee Salary </label>
-          <input name="Salary" {...formik.getFieldProps("Salary")}></input>
-        </p>
-        <p>
-          <label htmlFor="EmailId">Email Address </label>
-          <input name="EmailId" {...formik.getFieldProps("EmailId")}></input>
-          {formik.touched.EmailId && formik.errors.EmailId ? (
-            <span style={{ color: "red" }}>{formik.errors.EmailId}</span>
-          ) : null}
-        </p>
-        <button type="submit">Create</button>
-      </form>
-    </div>
-  );
-};
+//   return (
+//     <Formik
+//       initialValues={{
+//         Id: "",
+//         Name: "",
+//         Location: "",
+//         Salary: "",
+//         EmailId: "",
+//         Designation: "",
+//       }}
+//       // validate: validateEmployee,
+//       validationSchema={yup.object({
+//         Name: yup
+//           .string()
+//           .max(20, "Name cannot exceed more than 20 characters")
+//           .required("Please enter your name"),
+//         Location: yup.string().required("Please enter your location"),
+//         EmailId: yup
+//           .string()
+//           .email("Invalid Email")
+//           .required("Please enter your email"),
+//       })}
+//       onSubmit={(values) => {
+//         alert(JSON.stringify(values));
+//       }}
+//     >
+//       {(props) => (
+//         <div>
+//           <h3>New Employee Form</h3>
+//           <Form>
+//             <p>
+//               <label>Employee Id </label>
+//               <Field name="Id" type="text"></Field>
+//             </p>
+//             <p>
+//               <label>Employee Name </label>
+//               <Field name="Name" type="text"></Field>
+//               <ErrorMessage name="Name"></ErrorMessage>
+//             </p>
+//             <p>
+//               <label>Employee Location </label>
+//               <Field name="Location" type="text"></Field>
+//               <ErrorMessage name="Location"></ErrorMessage>
+//             </p>
+//             <p>
+//               <label>Employee Salary</label>
+//               <Field name="Salary" type="text"></Field>
+//             </p>
+//             <p>
+//               <label>Employee Email Address</label>
+//               <Field name="EmailId" type="text"></Field>
+//               <ErrorMessage name="EmailId"></ErrorMessage>
+//             </p>
+//             <p>
+//               <label>Employee Designation </label>
+//               <Field name="Designation" as="select">
+//                 <option value="SoftwareEngineer">Software Engineer</option>
+//                 <option value="SeniorSoftwareEngineer">
+//                   Senior Software Engineer
+//                 </option>
+//                 <option value="Lead">Lead</option>
+//               </Field>
+//             </p>
+//             <button type="submit" disabled={!props.isValid}>
+//               Create
+//             </button>
+//           </Form>
+//         </div>
+//       )}
+//     </Formik>
 
-const element = <EmployeeComponent></EmployeeComponent>;
-ReactDOM.render(element, document.getElementById("root"));
+//     // <div>
+//     //   <h3>New Employee Form</h3>
+//     //   <form onSubmit={formik.handleSubmit}>
+//     //     <p>
+//     //       <label htmlFor="Id">Employee Id </label>
+//     //       <input name="Id" {...formik.getFieldProps("Id")}></input>
+//     //     </p>
+//     //     <p>
+//     //       <label htmlFor="Name">Employee Name </label>
+//     //       <input name="Name" {...formik.getFieldProps("Name")}></input>
+//     //       {formik.touched.Name && formik.errors.Name ? (
+//     //         <span style={{ color: "red" }}>{formik.errors.Name}</span>
+//     //       ) : null}
+//     //     </p>
+//     //     <p>
+//     //       <label htmlFor="Location">Location </label>
+//     //       <input name="Location" {...formik.getFieldProps("Location")}></input>
+//     //       {formik.touched.Location && formik.errors.Location ? (
+//     //         <span style={{ color: "red" }}>{formik.errors.Location}</span>
+//     //       ) : null}
+//     //     </p>
+//     //     <p>
+//     //       <label htmlFor="Salary">Employee Salary </label>
+//     //       <input name="Salary" {...formik.getFieldProps("Salary")}></input>
+//     //     </p>
+//     //     <p>
+//     //       <label htmlFor="EmailId">Email Address </label>
+//     //       <input name="EmailId" {...formik.getFieldProps("EmailId")}></input>
+//     //       {formik.touched.EmailId && formik.errors.EmailId ? (
+//     //         <span style={{ color: "red" }}>{formik.errors.EmailId}</span>
+//     //       ) : null}
+//     //     </p>
+//     //     <button type="submit">Create</button>
+//     //   </form>
+//     // </div>
+//   );
+// };
+
+// const element = <EmployeeComponent></EmployeeComponent>;
+// ReactDOM.render(element, document.getElementById("root"));
 
 // class EmployeeComponent extends React.Component {
 //   constructor(props) {
