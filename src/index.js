@@ -22,9 +22,14 @@ class CustomErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div>
-          <h2>We are having issue while loading your preferences</h2>
-        </div>
+        <React.Fragment>
+          <div>
+            <h2>We are having issue while loading your preferences</h2>
+          </div>
+          <div>
+            <h2>Wait for some moment or try after some time</h2>
+          </div>
+        </React.Fragment>
       );
     } else {
       return this.props.children;
@@ -48,7 +53,8 @@ class OrderComponent extends React.Component {
   };
   render() {
     return (
-      <div>
+      // React Fragment
+      <>
         <h1>Product Order </h1>
         <ProductInformationComponent
           quantity={this.state.quantity}
@@ -63,7 +69,7 @@ class OrderComponent extends React.Component {
           address={this.state.address}
           onQuantityChange={this.orderInfoChanged}
         ></SummaryComponent>
-      </div>
+      </>
     );
   }
 }
