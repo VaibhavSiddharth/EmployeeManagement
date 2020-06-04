@@ -5,24 +5,67 @@ import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import video from "../src/asset/Cloud.mp4";
 
-class QuantityIncrement extends React.Component {
+const DemoComponent = React.forwardRef((props, ref) => {
+  function testClick() {
+    ref.current.focus();
+  }
+  return <button onClick={testClick}>Click</button>;
+});
+class Elevator extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { quantity: 0 };
-    this.quantityref = React.createRef();
+    this.elevatorRef = React.createRef();
   }
-  incrementQuantity = () => {
-    this.quantityref.current.value++;
-  };
+
   render() {
-    alert("Text message");
-    console.log(this.state.quantity);
     return (
       <div>
+        <h2>Welcome To Elevator Order Screen</h2>
         <p>
           <label>
-            Enter Quantity <input type="text" ref={this.quantityref}></input>
-            <button onClick={this.incrementQuantity}>+</button>
+            Elevator Name <input type="text" ref={this.elevatorRef}></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            Elevator Speed <input type="text"></input>
+          </label>
+        </p>
+        <p>
+          Elevator Load <input type="text"></input>
+        </p>
+        <Summary innerRef={this.elevatorRef}></Summary>
+        <DemoComponent ref={this.elevatorRef}></DemoComponent>
+      </div>
+    );
+  }
+}
+
+class Summary extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  focusInput = () => {
+    this.props.innerRef.current.focus();
+  };
+  render() {
+    return (
+      <div>
+        <h2>Summary Details</h2>
+        <p onClick={this.focusInput}>
+          <label>
+            Elevator Name <b>Elevator -1</b>
+          </label>
+        </p>
+        <p>
+          <label>
+            Elevator Speed <b>10m/s</b>
+          </label>
+        </p>
+        <p>
+          <label>
+            Elevator Load <b>550 Kg</b>
           </label>
         </p>
       </div>
@@ -30,67 +73,112 @@ class QuantityIncrement extends React.Component {
   }
 }
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.userNameRef = React.createRef();
+function testComponent() {
+  let testRef = null;
+  function handleClick() {
+    testRef.focus();
   }
 
-  componentDidMount() {
-    this.userNameRef.current.focus();
-  }
-
-  render() {
-    return (
-      <div>
-        <h2>Login Information</h2>
-        <p>
-          <label>
-            User Name <input type="text" ref={this.userNameRef}></input>
-          </label>
-        </p>
-        <p>
-          <label>
-            Password <input type="text"></input>
-          </label>
-        </p>
-        <button>Login</button>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <input type="text" ref={(e) => (testRef = e)}></input>
+      <input
+        type="button"
+        value="Focus on the text box"
+        onClick={handleClick}
+      ></input>
+    </div>
+  );
 }
 
-class VideoPlayer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.videoRef = React.createRef();
-  }
-
-  playVideo = () => {
-    this.videoRef.current.play();
-  };
-
-  pauseVideo = () => {
-    this.videoRef.current.pause();
-  };
-
-  render() {
-    return (
-      <div>
-        <video ref={this.videoRef} width="300" height="200" controls>
-          <source src={video} type="video/mp4"></source>
-        </video>
-        <div>
-          <button onClick={this.playVideo}>Play</button>
-          <button onClick={this.pauseVideo}>Pause</button>
-        </div>
-      </div>
-    );
-  }
-}
-
-const element = <VideoPlayer></VideoPlayer>;
+const element = <Elevator></Elevator>;
 ReactDOM.render(element, document.getElementById("root"));
+// class QuantityIncrement extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = { quantity: 0 };
+//     this.quantityref = React.createRef();
+//   }
+//   incrementQuantity = () => {
+//     this.quantityref.current.value++;
+//   };
+//   render() {
+//     alert("Text message");
+//     console.log(this.state.quantity);
+//     return (
+//       <div>
+//         <p>
+//           <label>
+//             Enter Quantity <input type="text" ref={this.quantityref}></input>
+//             <button onClick={this.incrementQuantity}>+</button>
+//           </label>
+//         </p>
+//       </div>
+//     );
+//   }
+// }
+
+// class Login extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.userNameRef = React.createRef();
+//   }
+
+//   componentDidMount() {
+//     this.userNameRef.current.focus();
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Login Information</h2>
+//         <p>
+//           <label>
+//             User Name <input type="text" ref={this.userNameRef}></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Password <input type="text"></input>
+//           </label>
+//         </p>
+//         <button>Login</button>
+//       </div>
+//     );
+//   }
+// }
+
+// class VideoPlayer extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.videoRef = React.createRef();
+//   }
+
+//   playVideo = () => {
+//     this.videoRef.current.play();
+//   };
+
+//   pauseVideo = () => {
+//     this.videoRef.current.pause();
+//   };
+
+//   render() {
+//     return (
+//       <div>
+//         <video ref={this.videoRef} width="300" height="200" controls>
+//           <source src={video} type="video/mp4"></source>
+//         </video>
+//         <div>
+//           <button onClick={this.playVideo}>Play</button>
+//           <button onClick={this.pauseVideo}>Pause</button>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = <VideoPlayer></VideoPlayer>;
+// ReactDOM.render(element, document.getElementById("root"));
 // class CustomErrorBoundary extends React.Component {
 //   constructor(props) {
 //     super(props);
