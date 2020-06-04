@@ -5,34 +5,36 @@ import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import video from "../src/asset/Cloud.mp4";
 
-class EmployeeReports extends React.Component {
+class Employee extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       employees: [],
+      showModal: false,
     };
   }
 
+  editEmployee = () => {
+    this.setState({ showModal: !this.state.showModal });
+  };
   componentDidMount() {
-    fetch("https://localhost:44346/api/Employee")
+    fetch("https://localhost:44346/api/employee")
       .then((res) => res.json())
-      .then((result) => {
-        this.setState({ employees: result });
-      });
-    console.log(this.state.employees);
+      .then((result) => this.setState({ employees: result }));
   }
 
   render() {
     return (
       <div>
-        <h2>Employee Data</h2>
+        <h2>Employee Information</h2>
         <table>
           <thead>
             <tr>
-              <td>ID</td>
-              <td>Name</td>
-              <td>Location</td>
-              <td>Salary</td>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Salary</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -42,6 +44,12 @@ class EmployeeReports extends React.Component {
                 <td>{emp.Name}</td>
                 <td>{emp.Location}</td>
                 <td>{emp.Salary}</td>
+                <td>
+                  <button onClick={this.editEmployee}>Edit</button>
+                  <Modal open={this.state.showModal} close={this.editEmployee}>
+                    <EmployeeModal employee={emp}></EmployeeModal>
+                  </Modal>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -51,69 +59,250 @@ class EmployeeReports extends React.Component {
   }
 }
 
-class DepartmentReport extends React.Component {
+class Modal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      dept: [],
-    };
   }
 
-  componentDidMount() {
-    fetch("https://localhost:44346/api/dept")
-      .then((res) => res.json())
-      .then((result) => {
-        this.setState({
-          dept: result,
-        });
-      });
+  render() {
+    return this.props.open
+      ? ReactDOM.createPortal(
+          <div className="modal">
+            <button onClick={this.props.close}>X</button>
+            {this.props.children}
+          </div>,
+          document.body
+        )
+      : null;
+  }
+}
+
+class EmployeeModal extends React.Component {
+  constructor(props) {
+    super(props);
   }
 
   render() {
     return (
       <div>
-        <h2>Department Data</h2>
-        <table>
-          <thead>
-            <tr>
-              <td>ID</td>
-              <td>Name</td>
-              <td>Revenue</td>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.dept.map((departmnt) => (
-              <tr key={departmnt.Id}>
-                <td>{departmnt.Id}</td>
-                <td>{departmnt.Name}</td>
-                <td>{departmnt.Revenue}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <h2>Employee Details </h2>
+        <p>
+          <label>
+            Employee ID{" "}
+            <input type="text" value={this.props.employee.Id}></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            Employee Name{" "}
+            <input type="text" value={this.props.employee.Name}></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            Employee Location{" "}
+            <input type="text" value={this.props.employee.Location}></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            Employee Salary{" "}
+            <input type="text" value={this.props.employee.Salary}></input>
+          </label>
+        </p>
+        <input type="submit" value="Save"></input>
       </div>
     );
   }
 }
 
-class AdminDashBoard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <EmployeeReports></EmployeeReports>
-        <DepartmentReport></DepartmentReport>
-      </React.Fragment>
-    );
-  }
-}
-
-const element = <AdminDashBoard></AdminDashBoard>;
-
+const element = <Employee></Employee>;
 ReactDOM.render(element, document.getElementById("root"));
+// function reportsHOC(InputComponent, inputData) {
+//   return class extends React.Component {
+//     constructor(props) {
+//       super(props);
+//       this.state = {
+//         data: [],
+//         columns: inputData.columns,
+//         header: inputData.header,
+//       };
+//     }
+
+//     componentDidMount() {
+//       fetch(inputData.url)
+//         .then((res) => res.json())
+//         .then((result) => this.setState({ data: result }));
+//     }
+
+//     render() {
+//       return <Data data={this.state}></Data>;
+//     }
+//   };
+// }
+
+// class Data extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>{this.props.data.header}</h2>
+//         <table>
+//           <thead>
+//             <tr>
+//               {this.props.data.columns.map((c) => (
+//                 <th>{c}</th>
+//               ))}
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {this.props.data.data.map((r) => (
+//               <tr key={r.Id}>
+//                 {this.props.data.columns.map((c) => (
+//                   <td>{r[c]}</td>
+//                 ))}
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     );
+//   }
+// }
+
+// class Report extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return <div></div>;
+//   }
+// }
+
+// const EmployeeReports = reportsHOC(Report, {
+//   url: "https://localhost:44346/api/employee",
+//   columns: ["Id", "Name", "Location", "Salary"],
+//   header: "Employee Record",
+// });
+
+// const DepartmentReports = reportsHOC(Report, {
+//   url: "https://localhost:44346/api/dept",
+//   columns: ["Id", "Name", "Revenue"],
+//   header: "Department Record",
+// });
+// class EmployeeReports extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       employees: [],
+//     };
+//   }
+
+//   componentDidMount() {
+//     fetch("https://localhost:44346/api/Employee")
+//       .then((res) => res.json())
+//       .then((result) => {
+//         this.setState({ employees: result });
+//       });
+//     console.log(this.state.employees);
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Employee Data</h2>
+//         <table>
+//           <thead>
+//             <tr>
+//               <td>ID</td>
+//               <td>Name</td>
+//               <td>Location</td>
+//               <td>Salary</td>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {this.state.employees.map((emp) => (
+//               <tr key={emp.Id}>
+//                 <td>{emp.Id}</td>
+//                 <td>{emp.Name}</td>
+//                 <td>{emp.Location}</td>
+//                 <td>{emp.Salary}</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     );
+//   }
+// }
+
+// class DepartmentReports extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       dept: [],
+//     };
+//   }
+
+//   componentDidMount() {
+//     fetch("https://localhost:44346/api/dept")
+//       .then((res) => res.json())
+//       .then((result) => {
+//         this.setState({
+//           dept: result,
+//         });
+//       });
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Department Data</h2>
+//         <table>
+//           <thead>
+//             <tr>
+//               <td>ID</td>
+//               <td>Name</td>
+//               <td>Revenue</td>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {this.state.dept.map((departmnt) => (
+//               <tr key={departmnt.Id}>
+//                 <td>{departmnt.Id}</td>
+//                 <td>{departmnt.Name}</td>
+//                 <td>{departmnt.Revenue}</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     );
+//   }
+// }
+
+// class AdminDashBoard extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <React.Fragment>
+//         <EmployeeReports></EmployeeReports>
+//         <DepartmentReports></DepartmentReports>
+//       </React.Fragment>
+//     );
+//   }
+// }
+
+// const element = <AdminDashBoard></AdminDashBoard>;
+
+// ReactDOM.render(element, document.getElementById("root"));
 // const DemoComponent = React.forwardRef((props, ref) => {
 //   function testClick() {
 //     ref.current.focus();
