@@ -3,200 +3,287 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
+import video from "../src/asset/Cloud.mp4";
 
-class CustomErrorBoundary extends React.Component {
+class QuantityIncrement extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: null };
+    this.state = { quantity: 0 };
+    this.quantityref = React.createRef();
   }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.log(error);
-    console.log(errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <React.Fragment>
-          <div>
-            <h2>We are having issue while loading your preferences</h2>
-          </div>
-          <div>
-            <h2>Wait for some moment or try after some time</h2>
-          </div>
-        </React.Fragment>
-      );
-    } else {
-      return this.props.children;
-    }
-  }
-}
-class OrderComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      quantity: "",
-      address: "",
-    };
-  }
-  orderInfoChanged = (value) => {
-    this.setState({ quantity: value });
-  };
-
-  addressChange = (value) => {
-    this.setState({ address: value });
+  incrementQuantity = () => {
+    this.quantityref.current.value++;
   };
   render() {
-    return (
-      // React Fragment
-      <>
-        <h1>Product Order </h1>
-        <ProductInformationComponent
-          quantity={this.state.quantity}
-          onQuantityChange={this.orderInfoChanged}
-        ></ProductInformationComponent>
-        <AddressInformationComponent
-          address={this.state.address}
-          onAddressChange={this.addressChange}
-        ></AddressInformationComponent>
-        <SummaryComponent
-          quantity={this.state.quantity}
-          address={this.state.address}
-          onQuantityChange={this.orderInfoChanged}
-        ></SummaryComponent>
-      </>
-    );
-  }
-}
-
-class ProductInformationComponent extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  handleChange = (e) => {
-    this.props.onQuantityChange(e.target.value);
-  };
-  render() {
-    return (
-      <div style={{ border: "3px solid red" }}>
-        <h2>Product Information </h2>
-        <p>
-          <label>
-            Product Name
-            <select>
-              <option value="Nutrilite">Nutrilite</option>
-              <option value="Artistry">Artistry</option>
-              <option value="Persona">Persona</option>
-            </select>
-          </label>
-        </p>
-        <p>
-          <label>
-            Product Quantity{" "}
-            <input
-              type="text"
-              value={this.props.quantity}
-              onChange={this.handleChange}
-            ></input>
-          </label>
-        </p>
-      </div>
-    );
-  }
-}
-
-class AddressInformationComponent extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  handleChange = (e) => {
-    this.props.onAddressChange(e.target.value);
-  };
-  render() {
-    return (
-      <div style={{ border: "3px solid red" }}>
-        <h2>Address Information</h2>
-        <p>
-          <label>
-            Address{" "}
-            <textarea
-              value={this.props.address}
-              onChange={this.handleChange}
-            ></textarea>
-          </label>
-        </p>
-        <CustomErrorBoundary>
-          <PreferredAddressComponent></PreferredAddressComponent>
-        </CustomErrorBoundary>
-      </div>
-    );
-  }
-}
-
-class PreferredAddressComponent extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    // throw new Error("Not able to show Preferred Address");
+    alert("Text message");
+    console.log(this.state.quantity);
     return (
       <div>
-        <h2>Your Existing Address </h2>
         <p>
-          Office Address <br></br>
-          Bagmane Tech World,Outer Ring Road,Bangalore,Karnataka
+          <label>
+            Enter Quantity <input type="text" ref={this.quantityref}></input>
+            <button onClick={this.incrementQuantity}>+</button>
+          </label>
         </p>
       </div>
     );
   }
 }
 
-class SummaryComponent extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props);
+    this.userNameRef = React.createRef();
   }
 
-  handleChange = (e) => {
-    this.props.onQuantityChange(e.target.value);
-  };
+  componentDidMount() {
+    this.userNameRef.current.focus();
+  }
+
   render() {
     return (
-      <div style={{ border: "3px solid red" }}>
-        <h2>Summary Information</h2>
+      <div>
+        <h2>Login Information</h2>
         <p>
           <label>
-            Product Name <b>Nutrilite</b>
+            User Name <input type="text" ref={this.userNameRef}></input>
           </label>
         </p>
         <p>
           <label>
-            Product Quantity{" "}
-            <input
-              type="text"
-              value={this.props.quantity}
-              onChange={this.handleChange}
-            ></input>
+            Password <input type="text"></input>
           </label>
         </p>
-        <p>
-          <label>
-            Address <b>{this.props.address}</b>
-          </label>
-        </p>
-        <button>Place Order</button>
+        <button>Login</button>
       </div>
     );
   }
 }
 
-const element = <OrderComponent></OrderComponent>;
+class VideoPlayer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.videoRef = React.createRef();
+  }
+
+  playVideo = () => {
+    this.videoRef.current.play();
+  };
+
+  pauseVideo = () => {
+    this.videoRef.current.pause();
+  };
+
+  render() {
+    return (
+      <div>
+        <video ref={this.videoRef} width="300" height="200" controls>
+          <source src={video} type="video/mp4"></source>
+        </video>
+        <div>
+          <button onClick={this.playVideo}>Play</button>
+          <button onClick={this.pauseVideo}>Pause</button>
+        </div>
+      </div>
+    );
+  }
+}
+
+const element = <VideoPlayer></VideoPlayer>;
 ReactDOM.render(element, document.getElementById("root"));
+// class CustomErrorBoundary extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = { hasError: null };
+//   }
+
+//   static getDerivedStateFromError(error) {
+//     return { hasError: true };
+//   }
+
+//   componentDidCatch(error, errorInfo) {
+//     console.log(error);
+//     console.log(errorInfo);
+//   }
+
+//   render() {
+//     if (this.state.hasError) {
+//       return (
+//         <React.Fragment>
+//           <div>
+//             <h2>We are having issue while loading your preferences</h2>
+//           </div>
+//           <div>
+//             <h2>Wait for some moment or try after some time</h2>
+//           </div>
+//         </React.Fragment>
+//       );
+//     } else {
+//       return this.props.children;
+//     }
+//   }
+// }
+// class OrderComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       quantity: "",
+//       address: "",
+//     };
+//   }
+//   orderInfoChanged = (value) => {
+//     this.setState({ quantity: value });
+//   };
+
+//   addressChange = (value) => {
+//     this.setState({ address: value });
+//   };
+//   render() {
+//     return (
+//       // React Fragment
+//       <>
+//         <h1>Product Order </h1>
+//         <ProductInformationComponent
+//           quantity={this.state.quantity}
+//           onQuantityChange={this.orderInfoChanged}
+//         ></ProductInformationComponent>
+//         <AddressInformationComponent
+//           address={this.state.address}
+//           onAddressChange={this.addressChange}
+//         ></AddressInformationComponent>
+//         <SummaryComponent
+//           quantity={this.state.quantity}
+//           address={this.state.address}
+//           onQuantityChange={this.orderInfoChanged}
+//         ></SummaryComponent>
+//       </>
+//     );
+//   }
+// }
+
+// class ProductInformationComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//   handleChange = (e) => {
+//     this.props.onQuantityChange(e.target.value);
+//   };
+//   render() {
+//     return (
+//       <div style={{ border: "3px solid red" }}>
+//         <h2>Product Information </h2>
+//         <p>
+//           <label>
+//             Product Name
+//             <select>
+//               <option value="Nutrilite">Nutrilite</option>
+//               <option value="Artistry">Artistry</option>
+//               <option value="Persona">Persona</option>
+//             </select>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Product Quantity{" "}
+//             <input
+//               type="text"
+//               value={this.props.quantity}
+//               onChange={this.handleChange}
+//             ></input>
+//           </label>
+//         </p>
+//       </div>
+//     );
+//   }
+// }
+
+// class AddressInformationComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//   handleChange = (e) => {
+//     this.props.onAddressChange(e.target.value);
+//   };
+//   render() {
+//     return (
+//       <div style={{ border: "3px solid red" }}>
+//         <h2>Address Information</h2>
+//         <p>
+//           <label>
+//             Address{" "}
+//             <textarea
+//               value={this.props.address}
+//               onChange={this.handleChange}
+//             ></textarea>
+//           </label>
+//         </p>
+//         <CustomErrorBoundary>
+//           <PreferredAddressComponent></PreferredAddressComponent>
+//         </CustomErrorBoundary>
+//       </div>
+//     );
+//   }
+// }
+
+// class PreferredAddressComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     // throw new Error("Not able to show Preferred Address");
+//     return (
+//       <div>
+//         <h2>Your Existing Address </h2>
+//         <p>
+//           Office Address <br></br>
+//           Bagmane Tech World,Outer Ring Road,Bangalore,Karnataka
+//         </p>
+//       </div>
+//     );
+//   }
+// }
+
+// class SummaryComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   handleChange = (e) => {
+//     this.props.onQuantityChange(e.target.value);
+//   };
+//   render() {
+//     return (
+//       <div style={{ border: "3px solid red" }}>
+//         <h2>Summary Information</h2>
+//         <p>
+//           <label>
+//             Product Name <b>Nutrilite</b>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Product Quantity{" "}
+//             <input
+//               type="text"
+//               value={this.props.quantity}
+//               onChange={this.handleChange}
+//             ></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Address <b>{this.props.address}</b>
+//           </label>
+//         </p>
+//         <button>Place Order</button>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = <OrderComponent></OrderComponent>;
+// ReactDOM.render(element, document.getElementById("root"));
 // const validateEmployee = (empData) => {
 //   const errors = {};
 
