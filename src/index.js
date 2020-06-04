@@ -5,94 +5,203 @@ import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import video from "../src/asset/Cloud.mp4";
 
-const DemoComponent = React.forwardRef((props, ref) => {
-  function testClick() {
-    ref.current.focus();
-  }
-  return <button onClick={testClick}>Click</button>;
-});
-class Elevator extends React.Component {
+class EmployeeReports extends React.Component {
   constructor(props) {
     super(props);
-    this.elevatorRef = React.createRef();
+    this.state = {
+      employees: [],
+    };
+  }
+
+  componentDidMount() {
+    fetch("https://localhost:44346/api/Employee")
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({ employees: result });
+      });
+    console.log(this.state.employees);
   }
 
   render() {
     return (
       <div>
-        <h2>Welcome To Elevator Order Screen</h2>
-        <p>
-          <label>
-            Elevator Name <input type="text" ref={this.elevatorRef}></input>
-          </label>
-        </p>
-        <p>
-          <label>
-            Elevator Speed <input type="text"></input>
-          </label>
-        </p>
-        <p>
-          Elevator Load <input type="text"></input>
-        </p>
-        <Summary innerRef={this.elevatorRef}></Summary>
-        <DemoComponent ref={this.elevatorRef}></DemoComponent>
+        <h2>Employee Data</h2>
+        <table>
+          <thead>
+            <tr>
+              <td>ID</td>
+              <td>Name</td>
+              <td>Location</td>
+              <td>Salary</td>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.employees.map((emp) => (
+              <tr key={emp.Id}>
+                <td>{emp.Id}</td>
+                <td>{emp.Name}</td>
+                <td>{emp.Location}</td>
+                <td>{emp.Salary}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }
 }
 
-class Summary extends React.Component {
+class DepartmentReport extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dept: [],
+    };
+  }
+
+  componentDidMount() {
+    fetch("https://localhost:44346/api/dept")
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          dept: result,
+        });
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>Department Data</h2>
+        <table>
+          <thead>
+            <tr>
+              <td>ID</td>
+              <td>Name</td>
+              <td>Revenue</td>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.dept.map((departmnt) => (
+              <tr key={departmnt.Id}>
+                <td>{departmnt.Id}</td>
+                <td>{departmnt.Name}</td>
+                <td>{departmnt.Revenue}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+}
+
+class AdminDashBoard extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  focusInput = () => {
-    this.props.innerRef.current.focus();
-  };
   render() {
     return (
-      <div>
-        <h2>Summary Details</h2>
-        <p onClick={this.focusInput}>
-          <label>
-            Elevator Name <b>Elevator -1</b>
-          </label>
-        </p>
-        <p>
-          <label>
-            Elevator Speed <b>10m/s</b>
-          </label>
-        </p>
-        <p>
-          <label>
-            Elevator Load <b>550 Kg</b>
-          </label>
-        </p>
-      </div>
+      <React.Fragment>
+        <EmployeeReports></EmployeeReports>
+        <DepartmentReport></DepartmentReport>
+      </React.Fragment>
     );
   }
 }
 
-function testComponent() {
-  let testRef = null;
-  function handleClick() {
-    testRef.focus();
-  }
+const element = <AdminDashBoard></AdminDashBoard>;
 
-  return (
-    <div>
-      <input type="text" ref={(e) => (testRef = e)}></input>
-      <input
-        type="button"
-        value="Focus on the text box"
-        onClick={handleClick}
-      ></input>
-    </div>
-  );
-}
-
-const element = <Elevator></Elevator>;
 ReactDOM.render(element, document.getElementById("root"));
+// const DemoComponent = React.forwardRef((props, ref) => {
+//   function testClick() {
+//     ref.current.focus();
+//   }
+//   return <button onClick={testClick}>Click</button>;
+// });
+// class Elevator extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.elevatorRef = React.createRef();
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Welcome To Elevator Order Screen</h2>
+//         <p>
+//           <label>
+//             Elevator Name <input type="text" ref={this.elevatorRef}></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Elevator Speed <input type="text"></input>
+//           </label>
+//         </p>
+//         <p>
+//           Elevator Load <input type="text"></input>
+//         </p>
+//         <Summary innerRef={this.elevatorRef}></Summary>
+//         <DemoComponent ref={this.elevatorRef}></DemoComponent>
+//       </div>
+//     );
+//   }
+// }
+
+// class Summary extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   focusInput = () => {
+//     this.props.innerRef.current.focus();
+//   };
+//   render() {
+//     return (
+//       <div>
+//         <h2>Summary Details</h2>
+//         <p onClick={this.focusInput}>
+//           <label>
+//             Elevator Name <b>Elevator -1</b>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Elevator Speed <b>10m/s</b>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Elevator Load <b>550 Kg</b>
+//           </label>
+//         </p>
+//       </div>
+//     );
+//   }
+// }
+
+// function testComponent() {
+//   let testRef = null;
+//   function handleClick() {
+//     testRef.focus();
+//   }
+
+//   return (
+//     <div>
+//       <input type="text" ref={(e) => (testRef = e)}></input>
+//       <input
+//         type="button"
+//         value="Focus on the text box"
+//         onClick={handleClick}
+//       ></input>
+//     </div>
+//   );
+// }
+
+// const element = <Elevator></Elevator>;
+// ReactDOM.render(element, document.getElementById("root"));
 // class QuantityIncrement extends React.Component {
 //   constructor(props) {
 //     super(props);
