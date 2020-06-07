@@ -5,38 +5,41 @@ import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import video from "../src/asset/Cloud.mp4";
 
-class DisplayEmployee extends React.Component {
+class ChangeDetection extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      employeeCount: 0,
+    };
+    setInterval(this.getEmployeeCount, 5000);
+  }
+
+  getEmployeeCount = () => {
+    fetch("https://localhost:44346/api/employee")
+      .then((res) => res.json())
+      .then((result) => this.setState({ employeeCount: result.length }));
+  };
+
+  componentDidMount() {
+    this.getEmployeeCount();
   }
 
   render() {
+    alert("Notification Message");
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Location</th>
-            <th>Salary</th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.employees.map((emp) => (
-            <tr key={emp.Id}>
-              <td>{emp.Id}</td>
-              <td>{emp.Name}</td>
-              <td>{emp.Location}</td>
-              <td>{emp.Salary}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div>
+        <h2>Welcome To Pure Component Demonstration </h2>
+        <p>
+          <label>
+            Number of employees: <b>{this.state.employeeCount}</b>
+          </label>
+        </p>
+      </div>
     );
   }
 }
 
-class EmployeeReports extends React.Component {
+class Reports extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,69 +47,45 @@ class EmployeeReports extends React.Component {
     };
   }
   componentDidMount() {
+    this.getEmployees();
+  }
+
+  getEmployees = () => {
     fetch("https://localhost:44346/api/employee")
       .then((res) => res.json())
       .then((result) => this.setState({ employees: result }));
-  }
+  };
+  loadEmployees = () => {
+    this.getEmployees();
+  };
 
   render() {
     return (
       <div>
-        <h2>Employee Details</h2>
-        {this.props.content(this.state.employees)}
-      </div>
-    );
-  }
-}
-const element = (
-  <EmployeeReports
-    content={(input) => <DisplayEmployee employees={input}></DisplayEmployee>}
-  ></EmployeeReports>
-);
-ReactDOM.render(element, document.getElementById("root"));
-class DisplayList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <ul>
-        {this.props.list.map((d) => (
-          <li>{d}</li>
-        ))}
-      </ul>
-    );
-  }
-}
-class Department extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      list: ["Dev", "Big Data", "Mobility"],
-    };
-  }
-
-  render() {
-    return (
-      <div>
-        <h2>Department List </h2>
-        {this.props.render(this.state.list)}
-      </div>
-    );
-  }
-}
-
-class Project extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div>
-        <h2>Project List </h2>
-        {this.props.render(this.props.list)}
+        <h2>Employee Information</h2>
+        <table style={{ border: "solid red" }}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Salary</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.employees.map((emp) => (
+              <tr key={emp.Id}>
+                <td>{emp.Id}</td>
+                <td>{emp.Name}</td>
+                <td>{emp.Location}</td>
+                <td>{emp.Salary}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p>
+          <button onClick={this.loadEmployees}>Reload</button>
+        </p>
       </div>
     );
   }
@@ -120,18 +99,142 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Department
-          render={(data) => <DisplayList list={data}></DisplayList>}
-        ></Department>
-        <Project
-          render={(data) => (
-            <DisplayList list={["Emblem", "Allianz", "Avista"]}></DisplayList>
-          )}
-        ></Project>
+        <ChangeDetection></ChangeDetection>
+        <Reports></Reports>
       </React.Fragment>
     );
   }
 }
+
+const element = <App></App>;
+ReactDOM.render(element, document.getElementById("root"));
+// class DisplayEmployee extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <table>
+//         <thead>
+//           <tr>
+//             <th>ID</th>
+//             <th>Name</th>
+//             <th>Location</th>
+//             <th>Salary</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {this.props.employees.map((emp) => (
+//             <tr key={emp.Id}>
+//               <td>{emp.Id}</td>
+//               <td>{emp.Name}</td>
+//               <td>{emp.Location}</td>
+//               <td>{emp.Salary}</td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     );
+//   }
+// }
+
+// class EmployeeReports extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       employees: [],
+//     };
+//   }
+//   componentDidMount() {
+//     fetch("https://localhost:44346/api/employee")
+//       .then((res) => res.json())
+//       .then((result) => this.setState({ employees: result }));
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Employee Details</h2>
+//         {this.props.content(this.state.employees)}
+//       </div>
+//     );
+//   }
+// }
+// const element = (
+//   <EmployeeReports
+//     content={(input) => <DisplayEmployee employees={input}></DisplayEmployee>}
+//   ></EmployeeReports>
+// );
+// ReactDOM.render(element, document.getElementById("root"));
+// class DisplayList extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <ul>
+//         {this.props.list.map((d) => (
+//           <li>{d}</li>
+//         ))}
+//       </ul>
+//     );
+//   }
+// }
+// class Department extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       list: ["Dev", "Big Data", "Mobility"],
+//     };
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Department List </h2>
+//         {this.props.render(this.state.list)}
+//       </div>
+//     );
+//   }
+// }
+
+// class Project extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Project List </h2>
+//         {this.props.render(this.props.list)}
+//       </div>
+//     );
+//   }
+// }
+
+// class App extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <React.Fragment>
+//         <Department
+//           render={(data) => <DisplayList list={data}></DisplayList>}
+//         ></Department>
+//         <Project
+//           render={(data) => (
+//             <DisplayList list={["Emblem", "Allianz", "Avista"]}></DisplayList>
+//           )}
+//         ></Project>
+//       </React.Fragment>
+//     );
+//   }
+// }
 
 // const element = <App></App>;
 // ReactDOM.render(element, document.getElementById("root"));
