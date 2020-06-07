@@ -1,83 +1,57 @@
-import React from "react";
+import React, { Profiler } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import video from "../src/asset/Cloud.mp4";
 
-class Employee extends React.Component {
+class NewAccountReports extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      employees: [],
-      showModal: false,
+      FromDate: "",
+      ToDate: "",
     };
   }
 
-  editEmployee = () => {
-    this.setState({ showModal: !this.state.showModal });
+  handleChange = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    this.setState({ [name]: value });
   };
-  componentDidMount() {
-    fetch("https://localhost:44346/api/employee")
-      .then((res) => res.json())
-      .then((result) => this.setState({ employees: result }));
-  }
 
   render() {
     return (
       <div>
-        <h2>Employee Information</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Salary</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.employees.map((emp) => (
-              <tr key={emp.Id}>
-                <td>{emp.Id}</td>
-                <td>{emp.Name}</td>
-                <td>{emp.Location}</td>
-                <td>{emp.Salary}</td>
-                <td>
-                  <button onClick={this.editEmployee}>Edit</button>
-                  <Modal open={this.state.showModal} close={this.editEmployee}>
-                    <EmployeeModal employee={emp}></EmployeeModal>
-                  </Modal>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <h2>Welcome To New Account Page</h2>
+        <p>
+          <label>
+            From Date{" "}
+            <input
+              type="text"
+              value={this.state.FromDate}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+        </p>
+        <p>
+          <label>
+            To Date{" "}
+            <input
+              type="text"
+              value={this.state.ToDate}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+        </p>
+        <input type="submit" value="Generate"></input>
       </div>
     );
   }
 }
 
-class Modal extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return this.props.open
-      ? ReactDOM.createPortal(
-          <div className="modal">
-            <button onClick={this.props.close}>X</button>
-            {this.props.children}
-          </div>,
-          document.body
-        )
-      : null;
-  }
-}
-
-class EmployeeModal extends React.Component {
+class LoanRepaymentReports extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -85,39 +59,167 @@ class EmployeeModal extends React.Component {
   render() {
     return (
       <div>
-        <h2>Employee Details </h2>
-        <p>
-          <label>
-            Employee ID{" "}
-            <input type="text" value={this.props.employee.Id}></input>
-          </label>
-        </p>
-        <p>
-          <label>
-            Employee Name{" "}
-            <input type="text" value={this.props.employee.Name}></input>
-          </label>
-        </p>
-        <p>
-          <label>
-            Employee Location{" "}
-            <input type="text" value={this.props.employee.Location}></input>
-          </label>
-        </p>
-        <p>
-          <label>
-            Employee Salary{" "}
-            <input type="text" value={this.props.employee.Salary}></input>
-          </label>
-        </p>
-        <input type="submit" value="Save"></input>
+        <h2>Welcome To Loan Repayment Report </h2>
       </div>
     );
   }
 }
 
-const element = <Employee></Employee>;
+class ReportsDashboard extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  callbackFunction = (
+    id,
+    phase,
+    actualDuration,
+    baseDuration,
+    startTime,
+    commitTime,
+    interaction
+  ) => {
+    console.log("Id is " + id + " ," + " phase is " + phase);
+    console.log(
+      "Actual Duration is " +
+        actualDuration +
+        " , " +
+        "Base Duration is " +
+        baseDuration
+    );
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <h2>Welcome To Reports Dashboard</h2>
+        <Profiler id="newAccounts" onRender={this.callbackFunction}>
+          <NewAccountReports></NewAccountReports>
+        </Profiler>
+        <Profiler id="loanRepayment" onRender={this.callbackFunction}>
+          <LoanRepaymentReports></LoanRepaymentReports>
+        </Profiler>
+      </React.Fragment>
+    );
+  }
+}
+
+const element = <ReportsDashboard></ReportsDashboard>;
 ReactDOM.render(element, document.getElementById("root"));
+
+// class Employee extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       employees: [],
+//       showModal: false,
+//     };
+//   }
+
+//   editEmployee = () => {
+//     this.setState({ showModal: !this.state.showModal });
+//   };
+//   componentDidMount() {
+//     fetch("https://localhost:44346/api/employee")
+//       .then((res) => res.json())
+//       .then((result) => this.setState({ employees: result }));
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Employee Information</h2>
+//         <table>
+//           <thead>
+//             <tr>
+//               <th>ID</th>
+//               <th>Name</th>
+//               <th>Location</th>
+//               <th>Salary</th>
+//               <th>Actions</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {this.state.employees.map((emp) => (
+//               <tr key={emp.Id}>
+//                 <td>{emp.Id}</td>
+//                 <td>{emp.Name}</td>
+//                 <td>{emp.Location}</td>
+//                 <td>{emp.Salary}</td>
+//                 <td>
+//                   <button onClick={this.editEmployee}>Edit</button>
+//                   <Modal open={this.state.showModal} close={this.editEmployee}>
+//                     <EmployeeModal employee={emp}></EmployeeModal>
+//                   </Modal>
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     );
+//   }
+// }
+
+// class Modal extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return this.props.open
+//       ? ReactDOM.createPortal(
+//           <div className="modal">
+//             <button onClick={this.props.close}>X</button>
+//             {this.props.children}
+//           </div>,
+//           document.body
+//         )
+//       : null;
+//   }
+// }
+
+// class EmployeeModal extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Employee Details </h2>
+//         <p>
+//           <label>
+//             Employee ID{" "}
+//             <input type="text" value={this.props.employee.Id}></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Employee Name{" "}
+//             <input type="text" value={this.props.employee.Name}></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Employee Location{" "}
+//             <input type="text" value={this.props.employee.Location}></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             Employee Salary{" "}
+//             <input type="text" value={this.props.employee.Salary}></input>
+//           </label>
+//         </p>
+//         <input type="submit" value="Save"></input>
+//       </div>
+//     );
+//   }
+// }
+
+// const element = <Employee></Employee>;
+// ReactDOM.render(element, document.getElementById("root"));
 // function reportsHOC(InputComponent, inputData) {
 //   return class extends React.Component {
 //     constructor(props) {
