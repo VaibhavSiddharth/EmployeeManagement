@@ -5,53 +5,99 @@ import { useFormik, Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import video from "../src/asset/Cloud.mp4";
 
-class NewAccountReports extends React.Component {
+class DisplayEmployee extends React.Component {
   constructor(props) {
     super(props);
+  }
 
+  render() {
+    return (
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Salary</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.props.employees.map((emp) => (
+            <tr key={emp.Id}>
+              <td>{emp.Id}</td>
+              <td>{emp.Name}</td>
+              <td>{emp.Location}</td>
+              <td>{emp.Salary}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+}
+
+class EmployeeReports extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      FromDate: "",
-      ToDate: "",
+      employees: [],
+    };
+  }
+  componentDidMount() {
+    fetch("https://localhost:44346/api/employee")
+      .then((res) => res.json())
+      .then((result) => this.setState({ employees: result }));
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>Employee Details</h2>
+        {this.props.content(this.state.employees)}
+      </div>
+    );
+  }
+}
+const element = (
+  <EmployeeReports
+    content={(input) => <DisplayEmployee employees={input}></DisplayEmployee>}
+  ></EmployeeReports>
+);
+ReactDOM.render(element, document.getElementById("root"));
+class DisplayList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <ul>
+        {this.props.list.map((d) => (
+          <li>{d}</li>
+        ))}
+      </ul>
+    );
+  }
+}
+class Department extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: ["Dev", "Big Data", "Mobility"],
     };
   }
 
-  handleChange = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-    this.setState({ [name]: value });
-  };
-
   render() {
     return (
       <div>
-        <h2>Welcome To New Account Page</h2>
-        <p>
-          <label>
-            From Date{" "}
-            <input
-              type="text"
-              value={this.state.FromDate}
-              onChange={this.handleChange}
-            ></input>
-          </label>
-        </p>
-        <p>
-          <label>
-            To Date{" "}
-            <input
-              type="text"
-              value={this.state.ToDate}
-              onChange={this.handleChange}
-            ></input>
-          </label>
-        </p>
-        <input type="submit" value="Generate"></input>
+        <h2>Department List </h2>
+        {this.props.render(this.state.list)}
       </div>
     );
   }
 }
 
-class LoanRepaymentReports extends React.Component {
+class Project extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -59,53 +105,137 @@ class LoanRepaymentReports extends React.Component {
   render() {
     return (
       <div>
-        <h2>Welcome To Loan Repayment Report </h2>
+        <h2>Project List </h2>
+        {this.props.render(this.props.list)}
       </div>
     );
   }
 }
 
-class ReportsDashboard extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  callbackFunction = (
-    id,
-    phase,
-    actualDuration,
-    baseDuration,
-    startTime,
-    commitTime,
-    interaction
-  ) => {
-    console.log("Id is " + id + " ," + " phase is " + phase);
-    console.log(
-      "Actual Duration is " +
-        actualDuration +
-        " , " +
-        "Base Duration is " +
-        baseDuration
-    );
-  };
 
   render() {
     return (
       <React.Fragment>
-        <h2>Welcome To Reports Dashboard</h2>
-        <Profiler id="newAccounts" onRender={this.callbackFunction}>
-          <NewAccountReports></NewAccountReports>
-        </Profiler>
-        <Profiler id="loanRepayment" onRender={this.callbackFunction}>
-          <LoanRepaymentReports></LoanRepaymentReports>
-        </Profiler>
+        <Department
+          render={(data) => <DisplayList list={data}></DisplayList>}
+        ></Department>
+        <Project
+          render={(data) => (
+            <DisplayList list={["Emblem", "Allianz", "Avista"]}></DisplayList>
+          )}
+        ></Project>
       </React.Fragment>
     );
   }
 }
 
-const element = <ReportsDashboard></ReportsDashboard>;
-ReactDOM.render(element, document.getElementById("root"));
+// const element = <App></App>;
+// ReactDOM.render(element, document.getElementById("root"));
+// class NewAccountReports extends React.Component {
+//   constructor(props) {
+//     super(props);
+
+//     this.state = {
+//       FromDate: "",
+//       ToDate: "",
+//     };
+//   }
+
+//   handleChange = (e) => {
+//     let name = e.target.name;
+//     let value = e.target.value;
+//     this.setState({ [name]: value });
+//   };
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Welcome To New Account Page</h2>
+//         <p>
+//           <label>
+//             From Date{" "}
+//             <input
+//               type="text"
+//               value={this.state.FromDate}
+//               onChange={this.handleChange}
+//             ></input>
+//           </label>
+//         </p>
+//         <p>
+//           <label>
+//             To Date{" "}
+//             <input
+//               type="text"
+//               value={this.state.ToDate}
+//               onChange={this.handleChange}
+//             ></input>
+//           </label>
+//         </p>
+//         <input type="submit" value="Generate"></input>
+//       </div>
+//     );
+//   }
+// }
+
+// class LoanRepaymentReports extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <h2>Welcome To Loan Repayment Report </h2>
+//       </div>
+//     );
+//   }
+// }
+
+// class ReportsDashboard extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   callbackFunction = (
+//     id,
+//     phase,
+//     actualDuration,
+//     baseDuration,
+//     startTime,
+//     commitTime,
+//     interaction
+//   ) => {
+//     console.log("Id is " + id + " ," + " phase is " + phase);
+//     console.log(
+//       "Actual Duration is " +
+//         actualDuration +
+//         " , " +
+//         "Base Duration is " +
+//         baseDuration
+//     );
+//   };
+
+//   render() {
+//     return (
+//       <React.Fragment>
+//         <h2>Welcome To Reports Dashboard</h2>
+//         <Profiler id="newAccounts" onRender={this.callbackFunction}>
+//           <NewAccountReports></NewAccountReports>
+//         </Profiler>
+//         <Profiler id="loanRepayment" onRender={this.callbackFunction}>
+//           <LoanRepaymentReports></LoanRepaymentReports>
+//         </Profiler>
+//       </React.Fragment>
+//     );
+//   }
+// }
+
+// const element = <ReportsDashboard></ReportsDashboard>;
+// ReactDOM.render(element, document.getElementById("root"));
 
 // class Employee extends React.Component {
 //   constructor(props) {
